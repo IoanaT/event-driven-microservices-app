@@ -1,13 +1,13 @@
-package com.microservices.event.productws.rest;
+package com.microservices.event.productws.query.rest;
 
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
-public class CreateProductRestModel {
+public class ProductRestModel {
 
     private  String title;
-    private  BigDecimal price;
+    private BigDecimal price;
     private  Integer quantity;
 }

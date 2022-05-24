@@ -1,4 +1,4 @@
-package com.microservices.event.productws.rest;
+package com.microservices.event.productws.command.rest;
 
 import com.microservices.event.productws.command.CreateProductCommand;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/products")
 @AllArgsConstructor
-public class ProductsController {
+public class ProductsCommandController {
 
     private final Environment env;
     private final CommandGateway commandGateway;
