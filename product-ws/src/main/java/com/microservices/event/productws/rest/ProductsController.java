@@ -22,7 +22,7 @@ public class ProductsController {
                 .price(createProductRestModel.getPrice())
                 .title(createProductRestModel.getTitle())
                 .quantity(createProductRestModel.getQuantity())
-                .titleId(UUID.randomUUID().toString()).build();
+                .productId(UUID.randomUUID().toString()).build();
         String returnValue;
         try {
             returnValue = commandGateway.sendAndWait(createProductCommand);

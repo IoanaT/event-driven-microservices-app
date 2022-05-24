@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 public class ProductAggregate {
 
     @AggregateIdentifier
-    private String titleId;
+    private String productId;
     private String title;
     private BigDecimal price;
     private Integer quantity;
@@ -41,7 +41,7 @@ public class ProductAggregate {
     @EventSourcingHandler
     public void on(ProductCreatedEvent productCreatedEvent) {
         this.price = productCreatedEvent.getPrice();
-        this.titleId = productCreatedEvent.getTitleId();
+        this.productId = productCreatedEvent.getProductId();
         this.title = productCreatedEvent.getTitle();
         this.quantity = productCreatedEvent.getQuantity();
     }

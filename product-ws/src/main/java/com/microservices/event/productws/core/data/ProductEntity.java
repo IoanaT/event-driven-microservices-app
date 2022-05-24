@@ -22,7 +22,7 @@ public class ProductEntity implements Serializable {
     private static final long serialVersionUID = 5984531377129212449L;
 
     @Id
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String productId;
 
     @Column(unique=true)

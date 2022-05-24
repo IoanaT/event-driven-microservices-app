@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 @Data
 public class ProductCreatedEvent {
-    private String titleId;
+    private String productId;
     private String title;
     private BigDecimal price;
     private Integer quantity;
