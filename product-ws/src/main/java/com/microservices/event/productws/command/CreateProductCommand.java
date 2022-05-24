@@ -15,6 +15,4 @@ public class CreateProductCommand {
     private final BigDecimal price;
     private final Integer quantity;
 
-
-
 }
