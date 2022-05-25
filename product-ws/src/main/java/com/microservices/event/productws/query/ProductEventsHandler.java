@@ -18,6 +18,6 @@ public class ProductEventsHandler {
     public void on(ProductCreatedEvent productCreatedEvent) {
         ProductEntity productEntity = new ProductEntity();
         BeanUtils.copyProperties(productCreatedEvent, productEntity);
-        productRepository.saveAndFlush(productEntity);
+        productRepository.save(productEntity);
     }
 }
