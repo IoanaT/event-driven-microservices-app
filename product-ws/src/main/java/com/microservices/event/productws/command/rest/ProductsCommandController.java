@@ -6,6 +6,7 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -17,7 +18,7 @@ public class ProductsCommandController {
     private final CommandGateway commandGateway;
 
     @PostMapping
-    public String createProduct(@RequestBody CreateProductRestModel createProductRestModel) {
+    public String createProduct(@Valid @RequestBody CreateProductRestModel createProductRestModel) {
         CreateProductCommand createProductCommand = CreateProductCommand.builder()
                 .price(createProductRestModel.getPrice())
                 .title(createProductRestModel.getTitle())

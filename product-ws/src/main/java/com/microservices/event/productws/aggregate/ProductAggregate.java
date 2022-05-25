@@ -28,9 +28,14 @@ public class ProductAggregate {
      * Used to validate CreateProductCommand
      */
     public ProductAggregate(CreateProductCommand createProductCommand) {
+        //validate Create Product Command
         if (Strings.isNullOrEmpty(createProductCommand.getTitle())) {
             throw new IllegalArgumentException("Title cannot be empty!");
         }
+        if (createProductCommand.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Price cannot be lower or equal to zero!");
+        }
+
         ProductCreatedEvent productCreatedEvent = new ProductCreatedEvent();
 
         BeanUtils.copyProperties(createProductCommand, productCreatedEvent);
