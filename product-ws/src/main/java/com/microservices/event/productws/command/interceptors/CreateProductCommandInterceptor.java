@@ -2,6 +2,9 @@ package com.microservices.event.productws.command.interceptors;
 
 import com.google.common.base.Strings;
 import com.microservices.event.productws.command.CreateProductCommand;
+import com.microservices.event.productws.core.data.ProductLookupEntity;
+import com.microservices.event.productws.core.data.ProductLookupRepository;
+import lombok.AllArgsConstructor;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.messaging.MessageDispatchInterceptor;
 import org.slf4j.Logger;
@@ -10,17 +13,19 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 @Component
+@AllArgsConstructor
 public class CreateProductCommandInterceptor implements MessageDispatchInterceptor<CommandMessage<?>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateProductCommandInterceptor.class);
 
+    private final ProductLookupRepository productLookupRepository;
 
     @Override
-    public BiFunction<Integer, CommandMessage<?>, CommandMessage<?>> handle(
-            List<? extends CommandMessage<?>> messages) {
+    public BiFunction<Integer, CommandMessage<?>, CommandMessage<?>> handle(List<? extends CommandMessage<?>> messages) {
 
         return (index, command) -> {
 
@@ -30,13 +35,13 @@ public class CreateProductCommandInterceptor implements MessageDispatchIntercept
 
                 CreateProductCommand createProductCommand = (CreateProductCommand) command.getPayload();
 
-                if (Strings.isNullOrEmpty(createProductCommand.getTitle())) {
-                    throw new IllegalArgumentException("Title cannot be empty!");
+                ProductLookupEntity productLookupEntity = productLookupRepository.findByProductIdOrTitle(
+                        createProductCommand.getProductId(), createProductCommand.getTitle());
+                if (!Objects.isNull(productLookupEntity)) {
+                    throw new IllegalStateException(String.format(
+                            "Product with productId %s or title %s already exists",
+                            createProductCommand.getProductId(), createProductCommand.getTitle()));
                 }
-                if (createProductCommand.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
-                    throw new IllegalArgumentException("Price cannot be lower or equal to zero!");
-                }
-
             }
             return command;
         };
