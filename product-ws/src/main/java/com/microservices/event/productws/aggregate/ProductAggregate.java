@@ -1,6 +1,8 @@
 package com.microservices.event.productws.aggregate;
 
 import com.google.common.base.Strings;
+import com.microservices.event.core.commands.ReserveProductCommand;
+import com.microservices.event.core.events.ProductReservedEvent;
 import com.microservices.event.productws.command.CreateProductCommand;
 import com.microservices.event.productws.core.events.ProductCreatedEvent;
 import lombok.NoArgsConstructor;
@@ -43,11 +45,23 @@ public class ProductAggregate {
         AggregateLifecycle.apply(productCreatedEvent);
     }
 
+    @CommandHandler
+    public void handle(ReserveProductCommand reserveProductCommand) {
+        if (quantity < reserveProductCommand.getQuantity()) {
+            throw new IllegalArgumentException("Insufficient number of items in stock");
+        }
+    }
+
     @EventSourcingHandler
     public void on(ProductCreatedEvent productCreatedEvent) {
         this.price = productCreatedEvent.getPrice();
         this.productId = productCreatedEvent.getProductId();
         this.title = productCreatedEvent.getTitle();
         this.quantity = productCreatedEvent.getQuantity();
+    }
+
+    @EventSourcingHandler
+    public void on(ProductReservedEvent productReservedEvent){
+        this.quantity -= productReservedEvent.getQuantity();
     }
 }
