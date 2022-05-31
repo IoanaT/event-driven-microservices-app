@@ -22,6 +22,10 @@ public class OrderSaga {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderSaga.class);
 
+    public OrderSaga() {
+
+    }
+
     @StartSaga
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(OrderCreatedEvent orderCreatedEvent) {

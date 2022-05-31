@@ -1,0 +1,19 @@
+package com.microservices.event.core.configuration;
+
+import com.thoughtworks.xstream.XStream;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class AxonConfig {
+
+    @Bean
+    public XStream xStream() {
+        XStream xStream = new XStream();
+
+        xStream.allowTypesByWildcard(new String[]{
+                "com.microservices.event.**"
+        });
+        return xStream;
+    }
+}
