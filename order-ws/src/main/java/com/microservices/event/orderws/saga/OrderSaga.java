@@ -1,15 +1,18 @@
-package com.microservices.event.orderws.orderws.saga;
+package com.microservices.event.orderws.saga;
 
 import com.microservices.event.core.commands.CancelProductReservationCommand;
 import com.microservices.event.core.commands.ProcessPaymentCommand;
 import com.microservices.event.core.commands.ReserveProductCommand;
 import com.microservices.event.core.events.OrderApprovedEvent;
 import com.microservices.event.core.events.PaymentProcessedEvent;
+import com.microservices.event.core.events.ProductReservationCancelledEvent;
 import com.microservices.event.core.events.ProductReservedEvent;
 import com.microservices.event.core.model.User;
 import com.microservices.event.core.query.FetchUserPaymentDetailsQuery;
-import com.microservices.event.orderws.orderws.command.ApproveOrderCommand;
-import com.microservices.event.orderws.orderws.core.events.OrderCreatedEvent;
+import com.microservices.event.orderws.command.ApproveOrderCommand;
+import com.microservices.event.orderws.core.events.OrderCreatedEvent;
+import com.microservices.event.orderws.command.RejectOrderCommand;
+import com.microservices.event.orderws.core.events.OrderRejectedEvent;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
@@ -17,7 +20,6 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
-import org.axonframework.modelling.saga.SagaLifecycle;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.spring.stereotype.Saga;
@@ -99,7 +101,7 @@ public class OrderSaga {
             cancelProductReservation(productReservedEvent, e.getMessage());
             return;
         }
-        if (result == null){
+        if (result == null) {
             LOGGER.info("The ProcessPaymentCommand resulted in NULL. Initiating a compensating transaction");
             //start compensating transaction
             cancelProductReservation(productReservedEvent, "Could not process user payment with provided payment details.");
@@ -121,7 +123,7 @@ public class OrderSaga {
     }
 
     @SagaEventHandler(associationProperty = "orderId")
-    public void handle(PaymentProcessedEvent paymentProcessedEvent){
+    public void handle(PaymentProcessedEvent paymentProcessedEvent) {
         //send an ApprovedOrderCommand
         ApproveOrderCommand approveOrderCommand = new ApproveOrderCommand(paymentProcessedEvent.getOrderId());
         commandGateway.send(approveOrderCommand);
@@ -129,9 +131,23 @@ public class OrderSaga {
 
     @EndSaga
     @SagaEventHandler(associationProperty = "orderId")
-    public void handle(OrderApprovedEvent orderApprovedEvent){
+    public void handle(OrderApprovedEvent orderApprovedEvent) {
         LOGGER.info("Order is approved. Order Saga is complete for orderId: \" + orderApprovedEvent.getOrderId());");
 //        SagaLifecycle.end();
     }
 
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(ProductReservationCancelledEvent productReservationCancelledEvent) {
+        // Create and send a RejectOrderCommand
+        RejectOrderCommand rejectOrderCommand = new RejectOrderCommand(productReservationCancelledEvent.getOrderId(),
+                productReservationCancelledEvent.getReason());
+
+        commandGateway.send(rejectOrderCommand);
+    }
+
+    @EndSaga
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(OrderRejectedEvent orderRejectedEvent) {
+        LOGGER.info("Successfully rejected order with id " + orderRejectedEvent.getOrderId());
+    }
 }

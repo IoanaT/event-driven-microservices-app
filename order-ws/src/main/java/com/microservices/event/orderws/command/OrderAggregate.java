@@ -1,8 +1,9 @@
-package com.microservices.event.orderws.orderws.command;
+package com.microservices.event.orderws.command;
 
 import com.microservices.event.core.events.OrderApprovedEvent;
-import com.microservices.event.orderws.orderws.core.events.OrderCreatedEvent;
+import com.microservices.event.orderws.core.events.OrderCreatedEvent;
 import com.microservices.event.core.model.OrderStatus;
+import com.microservices.event.orderws.core.events.OrderRejectedEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -49,8 +50,23 @@ public class OrderAggregate {
     }
 
     @EventSourcingHandler
-    protected void on(OrderApprovedEvent orderApprovedEvent){
+    protected void on(OrderApprovedEvent orderApprovedEvent) {
         this.orderStatus = orderApprovedEvent.getOrderStatus();
     }
+
+    @CommandHandler
+    public void handle(RejectOrderCommand rejectOrderCommand) {
+
+        OrderRejectedEvent orderRejectedEvent = new OrderRejectedEvent(rejectOrderCommand.getOrderId(),
+                rejectOrderCommand.getReason());
+
+        AggregateLifecycle.apply(orderRejectedEvent);
+    }
+
+    @EventSourcingHandler
+    public void on(OrderRejectedEvent orderRejectedEvent) {
+        this.orderStatus = orderRejectedEvent.getOrderStatus();
+    }
+
 
 }

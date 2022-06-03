@@ -1,6 +1,6 @@
 package com.microservices.event.productws.command.rest;
 
-import com.microservices.event.productws.command.CreateProductCommand;
+import com.microservices.event.productws.command.commands.CreateProductCommand;
 import lombok.AllArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.core.env.Environment;

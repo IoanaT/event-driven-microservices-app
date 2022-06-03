@@ -1,4 +1,4 @@
-package com.microservices.event.productws.command;
+package com.microservices.event.productws.command.commands;
 
 import lombok.Builder;
 import lombok.Data;

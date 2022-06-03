@@ -1,6 +1,6 @@
-package com.microservices.event.orderws.orderws.command.rest;
+package com.microservices.event.orderws.command.rest;
 
-import com.microservices.event.orderws.orderws.command.CreateOrderCommand;
+import com.microservices.event.orderws.command.CreateOrderCommand;
 import com.microservices.event.core.model.OrderStatus;
 import lombok.AllArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;

@@ -1,4 +1,4 @@
-package com.microservices.event.orderws.orderws.core.data;
+package com.microservices.event.orderws.core.data;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

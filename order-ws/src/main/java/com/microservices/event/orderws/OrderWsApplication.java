@@ -1,4 +1,4 @@
-package com.microservices.event.orderws.orderws;
+package com.microservices.event.orderws;
 
 import com.microservices.event.core.configuration.AxonConfig;
 import org.springframework.boot.SpringApplication;

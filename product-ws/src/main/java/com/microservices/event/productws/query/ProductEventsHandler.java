@@ -1,5 +1,6 @@
 package com.microservices.event.productws.query;
 
+import com.microservices.event.core.events.ProductReservationCancelledEvent;
 import com.microservices.event.core.events.ProductReservedEvent;
 import com.microservices.event.productws.core.data.ProductEntity;
 import com.microservices.event.productws.core.data.ProductRepository;
@@ -41,4 +42,22 @@ public class ProductEventsHandler {
         LOGGER.info("ProductReservedEvent is called for productId: " + productReservedEvent.getProductId() +
                 " and orderId: " + productReservedEvent.getOrderId());
     }
+
+    @EventHandler
+    public void on(ProductReservationCancelledEvent productReservationCancelledEvent) {
+        ProductEntity currentlyStoredProduct = productRepository.findByProductId(productReservationCancelledEvent.getProductId());
+
+        LOGGER.debug("ProductReservationCancelledEvent: Current product quantity "
+                + currentlyStoredProduct.getQuantity());
+
+        int newQuantity = currentlyStoredProduct.getQuantity() + productReservationCancelledEvent.getQuantity();
+        currentlyStoredProduct.setQuantity(newQuantity);
+
+        productRepository.save(currentlyStoredProduct);
+
+        LOGGER.debug("ProductReservationCancelledEvent: New product quantity "
+                + currentlyStoredProduct.getQuantity());
+
+    }
+
 }

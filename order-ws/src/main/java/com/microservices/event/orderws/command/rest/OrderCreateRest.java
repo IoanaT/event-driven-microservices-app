@@ -1,4 +1,4 @@
-package com.microservices.event.orderws.orderws.command.rest;
+package com.microservices.event.orderws.command.rest;
 
 import lombok.Data;
 

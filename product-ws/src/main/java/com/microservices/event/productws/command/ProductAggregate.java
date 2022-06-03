@@ -5,7 +5,7 @@ import com.microservices.event.core.commands.CancelProductReservationCommand;
 import com.microservices.event.core.commands.ReserveProductCommand;
 import com.microservices.event.core.events.ProductReservationCancelledEvent;
 import com.microservices.event.core.events.ProductReservedEvent;
-import com.microservices.event.productws.command.CreateProductCommand;
+import com.microservices.event.productws.command.commands.CreateProductCommand;
 import com.microservices.event.productws.core.events.ProductCreatedEvent;
 import lombok.NoArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
@@ -75,6 +75,11 @@ public class ProductAggregate {
                         .build();
 
         AggregateLifecycle.apply(productReservationCancelledEvent);
+    }
+
+    @EventSourcingHandler
+    public void on(ProductReservationCancelledEvent productReservationCancelledEvent) {
+        this.quantity += productReservationCancelledEvent.getQuantity();
     }
 
     @EventSourcingHandler

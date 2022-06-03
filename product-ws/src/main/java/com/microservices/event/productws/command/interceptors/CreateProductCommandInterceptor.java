@@ -1,7 +1,6 @@
 package com.microservices.event.productws.command.interceptors;
 
-import com.google.common.base.Strings;
-import com.microservices.event.productws.command.CreateProductCommand;
+import com.microservices.event.productws.command.commands.CreateProductCommand;
 import com.microservices.event.productws.core.data.ProductLookupEntity;
 import com.microservices.event.productws.core.data.ProductLookupRepository;
 import lombok.AllArgsConstructor;
@@ -11,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;

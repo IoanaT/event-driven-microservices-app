@@ -1,4 +1,4 @@
-package com.microservices.event.orderws.orderws.command;
+package com.microservices.event.orderws.command;
 
 import com.microservices.event.core.model.OrderStatus;
 import lombok.Builder;
