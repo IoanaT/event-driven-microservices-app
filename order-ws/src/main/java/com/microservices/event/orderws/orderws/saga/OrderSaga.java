@@ -1,5 +1,6 @@
 package com.microservices.event.orderws.orderws.saga;
 
+import com.microservices.event.core.commands.CancelProductReservationCommand;
 import com.microservices.event.core.commands.ProcessPaymentCommand;
 import com.microservices.event.core.commands.ReserveProductCommand;
 import com.microservices.event.core.events.OrderApprovedEvent;
@@ -73,9 +74,13 @@ public class OrderSaga {
             userPaymentDetails = queryGateway.query(query, ResponseTypes.instanceOf(User.class)).join();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
+            //start compensating transaction
+            cancelProductReservation(productReservedEvent, e.getMessage());
             return;
         }
         if (userPaymentDetails == null) {
+            //start compensating transaction
+            cancelProductReservation(productReservedEvent, "Could not fetch user payment details.");
             return;
         }
         LOGGER.info("Successfully user payment details for user: " + userPaymentDetails.getFirstName());
@@ -91,11 +96,28 @@ public class OrderSaga {
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             //start compensating transaction
+            cancelProductReservation(productReservedEvent, e.getMessage());
+            return;
         }
         if (result == null){
             LOGGER.info("The ProcessPaymentCommand resulted in NULL. Initiating a compensating transaction");
             //start compensating transaction
+            cancelProductReservation(productReservedEvent, "Could not process user payment with provided payment details.");
         }
+    }
+
+    private void cancelProductReservation(ProductReservedEvent productReservedEvent, String reason) {
+
+        CancelProductReservationCommand publishProductReservationCommand =
+                CancelProductReservationCommand.builder()
+                        .orderId(productReservedEvent.getOrderId())
+                        .productId(productReservedEvent.getProductId())
+                        .quantity(productReservedEvent.getQuantity())
+                        .userId(productReservedEvent.getUserId())
+                        .reason(reason)
+                        .build();
+
+        commandGateway.send(publishProductReservationCommand);
     }
 
     @SagaEventHandler(associationProperty = "orderId")

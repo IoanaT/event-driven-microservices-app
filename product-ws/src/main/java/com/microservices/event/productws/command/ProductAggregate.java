@@ -1,7 +1,9 @@
 package com.microservices.event.productws.command;
 
 import com.google.common.base.Strings;
+import com.microservices.event.core.commands.CancelProductReservationCommand;
 import com.microservices.event.core.commands.ReserveProductCommand;
+import com.microservices.event.core.events.ProductReservationCancelledEvent;
 import com.microservices.event.core.events.ProductReservedEvent;
 import com.microservices.event.productws.command.CreateProductCommand;
 import com.microservices.event.productws.core.events.ProductCreatedEvent;
@@ -59,6 +61,20 @@ public class ProductAggregate {
                 .build();
 
         AggregateLifecycle.apply(productReservedEvent);
+    }
+
+    @CommandHandler
+    public void handle(CancelProductReservationCommand cancelProductReservationCommand){
+        ProductReservationCancelledEvent productReservationCancelledEvent =
+                ProductReservationCancelledEvent.builder()
+                        .orderId(cancelProductReservationCommand.getOrderId())
+                        .productId(cancelProductReservationCommand.getProductId())
+                        .quantity(cancelProductReservationCommand.getQuantity())
+                        .reason(cancelProductReservationCommand.getReason())
+                        .userId(cancelProductReservationCommand.getUserId())
+                        .build();
+
+        AggregateLifecycle.apply(productReservationCancelledEvent);
     }
 
     @EventSourcingHandler
