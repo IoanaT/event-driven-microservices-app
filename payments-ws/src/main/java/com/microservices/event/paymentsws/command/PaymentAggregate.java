@@ -1,4 +1,4 @@
-package com.microservices.event.paymentsws.aggregate;
+package com.microservices.event.paymentsws.command;
 
 import com.google.common.base.Strings;
 import com.microservices.event.core.commands.ProcessPaymentCommand;

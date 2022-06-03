@@ -1,4 +1,4 @@
-package com.microservices.event.paymentsws.events;
+package com.microservices.event.paymentsws.query;
 
 import com.microservices.event.core.events.PaymentProcessedEvent;
 import com.microservices.event.paymentsws.data.PaymentEntity;

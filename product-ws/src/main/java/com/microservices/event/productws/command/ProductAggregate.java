@@ -1,4 +1,4 @@
-package com.microservices.event.productws.aggregate;
+package com.microservices.event.productws.command;
 
 import com.google.common.base.Strings;
 import com.microservices.event.core.commands.ReserveProductCommand;
