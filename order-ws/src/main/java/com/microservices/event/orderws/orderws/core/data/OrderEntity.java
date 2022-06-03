@@ -1,6 +1,6 @@
 package com.microservices.event.orderws.orderws.core.data;
 
-import com.microservices.event.orderws.orderws.core.model.OrderStatus;
+import com.microservices.event.core.model.OrderStatus;
 import lombok.*;
 import org.hibernate.Hibernate;
 

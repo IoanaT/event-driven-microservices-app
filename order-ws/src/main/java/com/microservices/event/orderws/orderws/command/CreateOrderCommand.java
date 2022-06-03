@@ -1,6 +1,6 @@
 package com.microservices.event.orderws.orderws.command;
 
-import com.microservices.event.orderws.orderws.core.model.OrderStatus;
+import com.microservices.event.core.model.OrderStatus;
 import lombok.Builder;
 import lombok.Data;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;

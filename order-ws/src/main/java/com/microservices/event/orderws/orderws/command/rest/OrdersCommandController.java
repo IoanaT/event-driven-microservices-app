@@ -1,13 +1,9 @@
 package com.microservices.event.orderws.orderws.command.rest;
 
 import com.microservices.event.orderws.orderws.command.CreateOrderCommand;
-import com.microservices.event.orderws.orderws.core.model.OrderStatus;
+import com.microservices.event.core.model.OrderStatus;
 import lombok.AllArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.axonframework.messaging.responsetypes.ResponseTypes;
-import org.axonframework.queryhandling.QueryGateway;
-import org.axonframework.queryhandling.SubscriptionQueryResult;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

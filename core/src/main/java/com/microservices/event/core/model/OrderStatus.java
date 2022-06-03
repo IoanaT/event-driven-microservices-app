@@ -1,4 +1,4 @@
-package com.microservices.event.orderws.orderws.core.model;
+package com.microservices.event.core.model;
 
 public enum OrderStatus {
     CREATED, APPROVED, REJECTED
