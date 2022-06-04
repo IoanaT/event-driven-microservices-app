@@ -1,9 +1,14 @@
 package com.microservices.event.orderws.command.rest;
 
+import com.microservices.event.core.model.OrderSummary;
 import com.microservices.event.orderws.command.CreateOrderCommand;
 import com.microservices.event.core.model.OrderStatus;
+import com.microservices.event.orderws.query.FindOrderQuery;
 import lombok.AllArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.messaging.responsetypes.ResponseTypes;
+import org.axonframework.queryhandling.QueryGateway;
+import org.axonframework.queryhandling.SubscriptionQueryResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +23,10 @@ import java.util.UUID;
 public class OrdersCommandController {
 
     private final CommandGateway commandGateway;
+    private final QueryGateway queryGateway;
 
     @PostMapping
-    public String createOrder(@Valid @RequestBody OrderCreateRest order) {
+    public OrderSummary createOrder(@Valid @RequestBody OrderCreateRest order) {
 
         String userId = "27b95829-4f3f-4ddf-8983-151ba010e35b";
 
@@ -33,7 +39,16 @@ public class OrdersCommandController {
                 .orderStatus(OrderStatus.CREATED)
                 .build();
 
-        return commandGateway.sendAndWait(createOrderCommand);
 
+        SubscriptionQueryResult<OrderSummary, OrderSummary> queryResult = queryGateway.subscriptionQuery(
+                new FindOrderQuery(createOrderCommand.getOrderId()), ResponseTypes.instanceOf(OrderSummary.class),
+                ResponseTypes.instanceOf(OrderSummary.class));
+
+        try {
+            commandGateway.sendAndWait(createOrderCommand);
+            return queryResult.updates().blockFirst();
+        } finally {
+            queryResult.close();
+        }
     }
 }
